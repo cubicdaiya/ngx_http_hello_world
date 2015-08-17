@@ -13,7 +13,7 @@
     "<title>Hello, World with nginx!</title>\n" \
     "</head>\n"                                 \
     "<body>\n"                                  \
-    "<p>Hello, World!</p>"                      \
+    "<p>Hello, World!</p>\n"                    \
     "</body>\n"                                 \
     "</html>\n"
 
