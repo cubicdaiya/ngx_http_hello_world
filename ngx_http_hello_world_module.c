@@ -97,8 +97,7 @@ static ngx_int_t ngx_http_hello_world_handler(ngx_http_request_t *r)
     out.buf     = b;
     out.next    = NULL;
 
-    r->headers_out.content_type.len  = ngx_strlen("text/html");
-    r->headers_out.content_type.data = (u_char *) "text/html";
+    ngx_str_set(&r->headers_out.content_type, "text/html");
     r->headers_out.status            = NGX_HTTP_OK;
     r->headers_out.content_length_n  = clen;
 
