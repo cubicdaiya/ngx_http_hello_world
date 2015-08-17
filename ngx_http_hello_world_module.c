@@ -6,16 +6,7 @@
 #include <ngx_core.h>
 #include <ngx_http.h>
 
-#define HTML_HELLO_WORLD                        \
-    "<!DOCTYPE html>\n"                         \
-    "<html>\n"                                  \
-    "<head>\n"                                  \
-    "<title>Hello, World with nginx!</title>\n" \
-    "</head>\n"                                 \
-    "<body>\n"                                  \
-    "<p>Hello, World!</p>\n"                    \
-    "</body>\n"                                 \
-    "</html>\n"
+#define NGX_HTTP_HELLO_WORLD "Hello, World!\n"
 
 static char *ngx_http_hello_world(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
 static ngx_int_t ngx_http_hello_world_handler(ngx_http_request_t *r);
@@ -67,8 +58,7 @@ static ngx_int_t ngx_http_hello_world_handler(ngx_http_request_t *r)
     ngx_int_t                    rc;
     ngx_chain_t                  out;
     ngx_buf_t                   *b;
-    u_char                      *buf;
-    ngx_uint_t                   clen;
+    ngx_str_t                    body = ngx_string(NGX_HTTP_HELLO_WORLD);
 
     if (r->method != NGX_HTTP_GET && r->method != NGX_HTTP_HEAD) {
         return NGX_HTTP_NOT_ALLOWED;
@@ -78,28 +68,20 @@ static ngx_int_t ngx_http_hello_world_handler(ngx_http_request_t *r)
         return NGX_HTTP_NOT_MODIFIED;
     }
 
-    buf = ngx_pcalloc(r->pool, BUFSIZ + 1);
-    if (buf == NULL) {
-        return NGX_HTTP_INTERNAL_SERVER_ERROR;
-    }
-    ngx_snprintf(buf, BUFSIZ, HTML_HELLO_WORLD);
-
-    clen = ngx_strlen(buf); 
-
     b = ngx_pcalloc(r->pool, sizeof(ngx_buf_t));
     if (b == NULL) {
         return NGX_HTTP_INTERNAL_SERVER_ERROR;
     }
-    b->pos      = buf;
-    b->last     = buf + clen;
+    b->pos      = body.data;
+    b->last     = b->pos + body.len;
     b->memory   = 1;
     b->last_buf = 1;
     out.buf     = b;
     out.next    = NULL;
 
-    ngx_str_set(&r->headers_out.content_type, "text/html");
+    ngx_str_set(&r->headers_out.content_type, "text/plain");
     r->headers_out.status            = NGX_HTTP_OK;
-    r->headers_out.content_length_n  = clen;
+    r->headers_out.content_length_n  = body.len;
 
     rc = ngx_http_send_header(r);
     if (rc == NGX_ERROR || rc > NGX_OK || r->header_only) {
