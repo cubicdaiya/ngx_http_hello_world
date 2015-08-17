@@ -70,7 +70,7 @@ static ngx_int_t ngx_http_hello_world_handler(ngx_http_request_t *r)
     u_char                      *buf;
     ngx_uint_t                   clen;
 
-    if (r->method != NGX_HTTP_GET) {
+    if (r->method != NGX_HTTP_GET && r->method != NGX_HTTP_HEAD) {
         return NGX_HTTP_NOT_ALLOWED;
     }
 
