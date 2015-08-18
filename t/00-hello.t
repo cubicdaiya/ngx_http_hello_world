@@ -12,6 +12,6 @@ __DATA__
         hello_world;
     }
 --- request
-    GET /hello
+GET /hello
 --- response_body
 Hello, World!
