@@ -2,11 +2,17 @@
 
 Hello, World with nginx
 
-```conf
+# Getting started
+
+There is the configuration below.
+
+```nginx
 location ~ /hello_world$ {
     hello_world;
 }
 ```
+
+There is the response below.
 
 ```sh
 $ curl -s "http://127.0.0.1:80/hello_world"
